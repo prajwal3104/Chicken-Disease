@@ -13,27 +13,29 @@ import base64
 
 @ensure_annotations
 def read_yaml(path_to_yaml: Path) -> ConfigBox:
-    """Read yaml file and return as dict
-    
+    """reads yaml file and returns
+
     Args:
         path_to_yaml (str): path like input
-    Raises:
-        ValueError: if file is empty
-        e: empty file
-    Returns:
-        ConfigBox: config box type
-    """
 
+    Raises:
+        ValueError: if yaml file is empty
+        e: empty file
+
+    Returns:
+        ConfigBox: ConfigBox type
+    """
     try:
         with open(path_to_yaml) as yaml_file:
             content = yaml.safe_load(yaml_file)
-            logger.info(f"yaml file loaded from {path_to_yaml}")
+            logger.info(f"yaml file: {path_to_yaml} loaded successfully")
             return ConfigBox(content)
     except BoxValueError:
-        raise BoxValueError("File is empty")
+        raise ValueError("yaml file is empty")
     except Exception as e:
-        logger.error(e)
         raise e
+    
+
 
 @ensure_annotations
 def create_directories(path_to_directories: list, verbose=True):
