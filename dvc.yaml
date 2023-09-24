@@ -7,7 +7,6 @@ stages:
     outs:
       - artifacts/data_ingestion/Chicken-fecal-images
 
-
   prepare_base_model:
     cmd: python src/cnnClassifier/pipeline/stage_02_prepare_base_model.py
     deps:
@@ -21,25 +20,6 @@ stages:
       - LEARNING_RATE
     outs:
       - artifacts/prepare_base_model
-
-
-
-  training:
-    cmd: python src/cnnClassifier/pipeline/stage_03_training.py
-    deps:
-      - src/cnnClassifier/pipeline/stage_03_training.py
-      - src/cnnClassifier/components/prepare_callbacks.py
-      - config/config.yaml
-      - artifacts/data_ingestion/Chicken-fecal-images
-      - artifacts/prepare_base_model
-    params:
-      - IMAGE_SIZE
-      - EPOCHS
-      - BATCH_SIZE
-      - AUGMENTATION
-    outs:
-      - artifacts/training/model.h5
-
 
   
 
@@ -56,3 +36,19 @@ stages:
     metrics:
     - scores.json:
         cache: false
+
+  training:
+    cmd: python src/cnnClassifier/pipeline/stage_03_training.py
+    deps:
+      - src/cnnClassifier/pipeline/stage_03_training.py
+      - src/cnnClassifier/components/prepare_callbacks.py
+      - config/config.yaml
+      - artifacts/data_ingestion/Chicken-fecal-images
+      - artifacts/prepare_base_model
+    params:
+      - IMAGE_SIZE
+      - EPOCHS
+      - BATCH_SIZE
+      - AUGMENTATION
+    outs:
+      - artifacts/training/model.h5
