@@ -26,7 +26,7 @@ class ConfigurationManager:
 
         data_ingestion_config = DataIngestionConfig(
             root_dir=config.root_dir,
-            scource_URL=config.scource_URL,
+            source_url=config.source_url,
             local_data_file=config.local_data_file,
             unzip_dir=config.unzip_dir 
         )
