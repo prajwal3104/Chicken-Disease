@@ -1,0 +1,85 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/cnnClassifier/pipeline/stage_01_data_ingestion.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 12ceeac741c4a08660d636fddea46e73
+      size: 772
+    - path: src/cnnClassifier/pipeline/stage_01_data_ingestion.py
+      hash: md5
+      md5: 35f63948e56b64b1fdd89cd5b9076b1e
+      size: 939
+    outs:
+    - path: artifacts/data_ingestion/unzip/Chicken-fecal-images
+      hash: md5
+      md5: 9e1f8dd2eae3c29e9d635df89d438ae4.dir
+      size: 12207807
+      nfiles: 390
+  prepare_base_model:
+    cmd: python src/cnnClassifier/pipeline/stage_02_prepare_base_model.py
+    deps:
+    - path: config/config.yaml
+      hash: md5
+      md5: 12ceeac741c4a08660d636fddea46e73
+      size: 772
+    - path: src/cnnClassifier/pipeline/stage_02_prepare_base_model.py
+      hash: md5
+      md5: 870643cc2d868fb0603a916a607a7cb1
+      size: 974
+    params:
+      params.yaml:
+        CLASSES: 2
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+        INCLUDE_TOP: false
+        LEARNING_RATE: 0.001
+        WEIGHTS: imagenet
+    outs:
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: 5fff88cc035de88aa9dbd42cba95b2f0.dir
+      size: 118058104
+      nfiles: 2
+  training:
+    cmd: python src/cnnClassifier/pipeline/stage_03_training.py
+    deps:
+    - path: artifacts/data_ingestion/unzip/Chicken-fecal-images
+      hash: md5
+      md5: 9e1f8dd2eae3c29e9d635df89d438ae4.dir
+      size: 12207807
+      nfiles: 390
+    - path: artifacts/prepare_base_model
+      hash: md5
+      md5: 5fff88cc035de88aa9dbd42cba95b2f0.dir
+      size: 118058104
+      nfiles: 2
+    - path: config/config.yaml
+      hash: md5
+      md5: 12ceeac741c4a08660d636fddea46e73
+      size: 772
+    - path: src/cnnClassifier/components/prepare_callbacks.py
+      hash: md5
+      md5: 4a4b9c93d13a38f229d770bab4714fdc
+      size: 1068
+    - path: src/cnnClassifier/pipeline/stage_03_training.py
+      hash: md5
+      md5: 6ff0e20114d1138e1a79fc3a870c0b9f
+      size: 1228
+    params:
+      params.yaml:
+        AUGMENTATION: true
+        BATCH_SIZE: 16
+        EPOCHS: 1
+        IMAGE_SIZE:
+        - 224
+        - 224
+        - 3
+    outs:
+    - path: artifacts/training/model.h5
+      hash: md5
+      md5: 2cace62405ebb0168ffb833e9aa6b060
+      size: 59138368
